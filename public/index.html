@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+<body>
+    <h1 id="headh1"><span>Marvin</span> the Darwin</h1>
+    <h3 id="headh3">Ask him what you want!</h3>
+    <div class="container"></div>
+    <form method="get">
+        <input type="text" name="question" id="" placeholder="Ask Marv a question">
+        <button type="submit">Ask</button>
+    </form>
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+        const socket = io()
+        const form = document.querySelector('form')
+        const container = document.querySelector('.container')
+        function createMessage(e,color){
+            const div = document.createElement('div')
+            div.className = "message"
+            div.innerHTML = e
+            div.style.backgroundColor = color
+            container.appendChild(div)
+            container.scrollTo(0,9999);
+        }
+        form.addEventListener('submit', (e)=>{
+            e.preventDefault()
+            let value = e.target[0].value
+            socket.emit('question', value)
+            createMessage(value, '#F14A16')
+            e.target.reset()
+        })
+        socket.on('response', data => createMessage(data, 'seagreen'))
+        
+    </script>
+</body>
+</html>
